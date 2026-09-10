@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparativa de Modelos Claude</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 20px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .pricing-low {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .pricing-high {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            background: #f0f4ff;
+            padding: 10px;
+            border-left: 4px solid #667eea;
+            margin: 8px 0;
+        }
+
+        .use-case {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 8px 0;
+        }
+
+        .example-item {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 3px 5px 3px 0;
+            white-space: nowrap;
+        }
+
+        .deep-research-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .deep-research-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .deep-research-box ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .deep-research-box li {
+            margin-bottom: 8px;
+        }
+
+        .effort-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .effort-simple {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .effort-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .effort-complex {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .cost-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .cost-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .cost-card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .cost-card-price {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .cost-card-desc {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .decision-tree {
+            background: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        .decision-tree h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .decision-item {
+            background: white;
+            padding: 15px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .decision-item strong {
+            color: #667eea;
+            font-size: 1.05em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.95em;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85em;
+            }
+
+            .example-item {
+                display: block;
+                margin: 5px 0;
+                white-space: normal;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            .cost-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .deep-research-box {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.8em;
+            }
+
+            .analogy, .use-case {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+
+            .model-name {
+                font-size: 0.9em;
+            }
+        }
+
+        .footnote {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Comparativa de Modelos Claude 2026</h1>
+            <p>Análisis de consumo de tokens, capacidades y recomendaciones de uso</p>
+        </div>
+
+        <div class="content">
+            <!-- TABLA 1: RESUMEN GENERAL -->
+            <div class="section">
+                <h2 class="section-title">1. Resumen General de Modelos</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Ratio</th>
+                                <th>Consumo Relativo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="model-name">Claude Haiku 4.5</td>
+                                <td class="pricing-low">$1 / 1M</td>
+                                <td class="pricing-low">$5 / 1M</td>
+                                <td>1:5</td>
+                                <td><strong>1.0x</strong> (base)</td>
+                            </tr>
+                            <tr>
+                                <td class="model-name">Claude Sonnet 5</td>
+                                <td>$2 / 1M</td>
+                                <td>$10 / 1M</td>
+                                <td>1:5</td>
+                                <td><strong>3.0x</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="model-name">Claude Opus 5</td>
+                                <td>$5 / 1M</td>
+                                <td>$25 / 1M</td>
+                                <td>1:5</td>
+                                <td><strong>7.5x</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="model-name">Claude Fable 5.1</td>
+                                <td class="pricing-high">$10 / 1M</td>
+                                <td class="pricing-high">$50 / 1M</td>
+                                <td>1:5</td>
+                                <td><strong>15.0x</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="deep-research-box">
+                    <h3>¿Qué es "Investigación Profunda" (Deep Research)?</h3>
+                    <p>Deep Research es una capacidad exclusiva de Claude que automatiza un proceso investigativo análogo al de un analista humano dedicado. Mientras que una respuesta estándar entrega síntesis basada en el contexto proporcionado, Deep Research ejecuta múltiples búsquedas web, consulta fuentes heterogéneas, cruza información entre ellas, identifica inconsistencias, y compila un reporte estructurado con atribución de fuentes.</p>
+                    <ul>
+                        <li><strong>Duración:</strong> 5–10 minutos por investigación, ejecutada en segundo plano</li>
+                        <li><strong>Consumo de tokens:</strong> Alto (múltiples búsquedas + síntesis), consumidas contra tu cuota de research (separada de API tokens estándar)</li>
+                        <li><strong>Casos de uso:</strong> Análisis de mercado competitivo, síntesis de literatura académica, revisión de cambios regulatorios, benchmarking multi-jurisdiccional</li>
+                        <li><strong>Diferencia con Fable:</strong> Fable es capacidad pura de razonamiento sin acceso a búsqueda; Deep Research es búsqueda + síntesis automatizada</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TABLA 2: DETALLADA POR MODELO Y TIPO DE ESFUERZO -->
+            <div class="section">
+                <h2 class="section-title">2. Matriz Detallada: Modelos × Tipo de Esfuerzo</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Analogía Conceptual</th>
+                                <th>Tipo de Esfuerzo</th>
+                                <th>Casos de Uso Específicos</th>
+                                <th>Ejemplos Concretos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- HAIKU -->
+                            <tr>
+                                <td rowspan="3" class="model-name">Haiku 4.5</td>
+                                <td rowspan="3">
+                                    <div class="analogy">
+                                        Calculadora de escritorio: rápida, precisa en operaciones sencillas, pero no maneja análisis complejos. Ejecuta instrucciones determinísticas sin necesidad de interpretación.
+                                    </div>
+                                </td>
+                                <td><span class="effort-badge effort-simple">Esfuerzo Mínimo</span></td>
+                                <td>Clasificación binaria/multinomial, routing automático, extracción estructurada de datos conocidos, detección de spam, análisis de sentimiento básico.</td>
+                                <td>
+                                    <div class="example-item">¿Este email es spam?</div>
+                                    <div class="example-item">Clasificar ticket en 5 categorías</div>
+                                    <div class="example-item">Extraer nombre, email, teléfono</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-simple">Alto Volumen</span></td>
+                                <td>Procesamiento de 100k+ solicitudes/mes, APIs de latencia sub-segundo, chatbots de consumo masivo, sistemas de moderación de contenido.</td>
+                                <td>
+                                    <div class="example-item">Moderador de redes sociales (1M posts/día)</div>
+                                    <div class="example-item">Classify user intent en app</div>
+                                    <div class="example-item">Resumen automático de tickets</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-simple">Presupuesto Crítico</span></td>
+                                <td>Startup con budget limitado, MVP con restricción de costos operacionales, procesamiento de datos históricos donde velocidad no es crítica.</td>
+                                <td>
+                                    <div class="example-item">Procesar 1M registros históricos por $1-5</div>
+                                    <div class="example-item">Etiquetado de dataset de entrenamiento</div>
+                                    <div class="example-item">Análisis bulk de feedback de clientes</div>
+                                </td>
+                            </tr>
+
+                            <!-- SONNET -->
+                            <tr>
+                                <td rowspan="3" class="model-name">Sonnet 5</td>
+                                <td rowspan="3">
+                                    <div class="analogy">
+                                        Calculadora científica: maneja variables complejas, ecuaciones multivariables, y lógica condicional. Experto generalista que resuelve problemas medianos sin necesidad de especialización.
+                                    </div>
+                                </td>
+                                <td><span class="effort-badge effort-medium">Esfuerzo Medio</span></td>
+                                <td>Generación de código, análisis de documentos múltiples, procesamiento con agentes (multi-step), síntesis de información cruzada, debugging de código complejo.</td>
+                                <td>
+                                    <div class="example-item">Generar API REST en 3 idiomas</div>
+                                    <div class="example-item">Analizar 50 documentos regulatorios</div>
+                                    <div class="example-item">Debug de aplicación JavaScript</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-medium">Reasoning Moderado</span></td>
+                                <td>Análisis financiero de mediana complejidad, evaluación de opciones estratégicas, síntesis de investigación académica, recomendaciones con justificación.</td>
+                                <td>
+                                    <div class="example-item">Analizar 3 opciones de inversión</div>
+                                    <div class="example-item">Evaluar trade-off de arquitectura</div>
+                                    <div class="example-item">Sintetizar literatura sobre tendencia X</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-medium">Producción Estable</span></td>
+                                <td>Punto de partida predeterminado para aplicaciones nuevas, workflows de agentes con herramientas, automatización de procesos de negocios medianos.</td>
+                                <td>
+                                    <div class="example-item">Agente que gestiona tickets de soporte</div>
+                                    <div class="example-item">Pipeline de análisis de facturas</div>
+                                    <div class="example-item">Generador de reportes automáticos</div>
+                                </td>
+                            </tr>
+
+                            <!-- OPUS -->
+                            <tr>
+                                <td rowspan="3" class="model-name">Opus 5</td>
+                                <td rowspan="3">
+                                    <div class="analogy">
+                                        Experto humano especializado: pensamiento multidimensional, maneja ambigüedades, reconoce matices, resuelve problemas que requieren múltiples saltos lógicos interdependientes.
+                                    </div>
+                                </td>
+                                <td><span class="effort-badge effort-complex">Razonamiento Profundo</span></td>
+                                <td>Análisis de riesgo estratégico, diagnóstico de problemas con múltiples variables interdependientes, investigación metodológica, validación de conclusiones críticas.</td>
+                                <td>
+                                    <div class="example-item">Análisis de riesgo en M&A</div>
+                                    <div class="example-item">Diagnóstico de falla en equipo industrial</div>
+                                    <div class="example-item">Validar metodología de estudio</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-complex">Alto Valor</span></td>
+                                <td>Decisiones donde la calidad de análisis compensa múltiples veces el token consumido, cumplimiento regulatorio complejo, asesoría estratégica.</td>
+                                <td>
+                                    <div class="example-item">Due diligence legal pre-litigio</div>
+                                    <div class="example-item">Estrategia de transformación digital</div>
+                                    <div class="example-item">Análisis de vulnerabilidades de ciberseguridad</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-complex">Problemas Mal Definidos</span></td>
+                                <td>Situaciones donde el enunciado es ambiguo, donde faltan datos, donde hay incertidumbre metodológica, donde se requiere inferencia robusta.</td>
+                                <td>
+                                    <div class="example-item">¿Qué oportunidad comercial no vemos?</div>
+                                    <div class="example-item">Diseñar experimento para hipótesis débil</div>
+                                    <div class="example-item">Interpretar resultado inesperado</div>
+                                </td>
+                            </tr>
+
+                            <!-- FABLE -->
+                            <tr>
+                                <td rowspan="3" class="model-name">Fable 5.1</td>
+                                <td rowspan="3">
+                                    <div class="analogy">
+                                        Equipo de consultores de talla mundial: máxima capacidad de análisis, pero acceso limitado y costo prohibitivo para uso masivo. Se contrata solo cuando la apuesta es existencial.
+                                    </div>
+                                </td>
+                                <td><span class="effort-badge effort-complex">Frontera de Investigación</span></td>
+                                <td>Investigación original sin precedentes, análisis en dominios especializados sin literatura consolidada, validación de decisiones de riesgo extremo.</td>
+                                <td>
+                                    <div class="example-item">Análisis de viabilidad de patente novedosa</div>
+                                    <div class="example-item">Evaluación de tecnología disruptiva</div>
+                                    <div class="example-item">Diseño de estrategia en mercado sin datos históricos</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-complex">Decisión Crítica</span></td>
+                                <td>Fusiones de billones USD, decisiones con impacto existencial en la organización, litigio de alto riesgo, validación previa a anuncio público.</td>
+                                <td>
+                                    <div class="example-item">Validar análisis de adquisición $500M+</div>
+                                    <div class="example-item">Asesoría en decisión de pivote estratégico</div>
+                                    <div class="example-item">Review de defensa legal previa a juicio</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="effort-badge effort-complex">Disponibilidad Restringida</span></td>
+                                <td>Acceso bajo Project Glasswing (organizaciones de investigación selectas), no disponible para público general, requiere autorización explícita de Anthropic.</td>
+                                <td>
+                                    <div class="example-item">Acceso: proyecto académico validado</div>
+                                    <div class="example-item">Acceso: equipo de investigación de Fortune 500</div>
+                                    <div class="example-item">Acceso: no disponible para consultor independiente</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TABLA 3: DECISIÓN POR CARACTERÍSTICAS -->
+            <div class="section">
+                <h2 class="section-title">3. Árbol de Decisión: Qué Modelo Elegir</h2>
+                
+                <div class="decision-tree">
+                    <h3>🎯 Selecciona por Restricción Primaria</h3>
+                    
+                    <div class="decision-item">
+                        <strong>¿La restricción es PRESUPUESTO?</strong><br>
+                        → <strong>Haiku 4.5</strong><br>
+                        Razón: Costo 1x, suficiente para >95% de tareas de clasificación y extracción. Combina con prompt caching (reduce costo a 0.125x) si reutilizas el mismo contexto.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿La restricción es LATENCIA?</strong><br>
+                        → <strong>Haiku 4.5</strong> (sub-100ms) o <strong>Sonnet 5</strong> (100-300ms)<br>
+                        Razón: Haiku es el más rápido; Sonnet casi tan rápido pero con mejor razonamiento para APIs de cliente donde percepto < 500ms.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿La restricción es VOLUMEN (>50k solicitudes/mes)?</strong><br>
+                        → <strong>Haiku 4.5</strong><br>
+                        Razón: Costo marginal domina; por cada million tokens ahorras $4 entrada y $20 salida vs Sonnet. En 50k solicitudes de 2k tokens entrada/500 salida = 100M entrada, 25M salida = ahorro de $400-500/mes.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿No hay restricción clara o es la PRIMERA VEZ implementando?</strong><br>
+                        → <strong>Sonnet 5</strong><br>
+                        Razón: Punto de equilibrio recomendado por Anthropic; suficiente para >90% de casos reales, mejor que Haiku en reasoning, más barato que Opus. Migra a Haiku si el volumen lo justifica; migra a Opus si la calidad lo justifica.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿El problema es MAL DEFINIDO o requiere INVESTIGACIÓN?</strong><br>
+                        → <strong>Opus 5</strong><br>
+                        Razón: Capacidad de razonamiento > Sonnet; maneja ambigüedad, infiere variables ocultas, genera hipótesis. Para análisis estratégico donde el enunciado es vago.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿El error es INACEPTABLE (decisión de billones, litigio, salud)?</strong><br>
+                        → <strong>Opus 5</strong> o <strong>Fable 5.1**<br>
+                        Razón: Mayor probabilidad de validez metodológica. Fable si tienes acceso (Project Glasswing) y costo no es factor limitante.
+                    </div>
+
+                    <div class="decision-item">
+                        <strong>¿Necesitas DEEP RESEARCH (búsqueda + síntesis)?</strong><br>
+                        → Cualquier modelo + <strong>Deep Research activado</strong><br>
+                        Razón: Deep Research es feature ortogonal a la capacidad del modelo. Úsalo con Sonnet para reducir costo; úsalo con Opus si necesitas síntesis de análisis complejos.
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA 4: COST-BENEFIT -->
+            <div class="section">
+                <h2 class="section-title">4. Análisis de Costo-Beneficio por Caso</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Caso de Uso</th>
+                                <th>Modelo Recomendado</th>
+                                <th>Costo Estimado (1k solicitudes)</th>
+                                <th>Justificación Económica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Moderación de contenido (1M posts/día)</td>
+                                <td><strong>Haiku 4.5</strong></td>
+                                <td>$3–8</td>
+                                <td>Volumen domina; error tolerable; Haiku suficiente. Ahorro vs Sonnet: $6–20k/mes.</td>
+                            </tr>
+                            <tr>
+                                <td>Generación de código (agente)</td>
+                                <td><strong>Sonnet 5</strong></td>
+                                <td>$12–30</td>
+                                <td>Razonamiento necesario; Haiku falla frecuentemente. Valor de código correcto > costo token.</td>
+                            </tr>
+                            <tr>
+                                <td>Análisis de riesgo pre-adquisición ($500M deal)</td>
+                                <td><strong>Opus 5</strong></td>
+                                <td>$50–200</td>
+                                <td>Error de 1% = $5M en pérdida esperada. Costo token es <0.01% del riesgo; usa el mejor modelo.</td>
+                            </tr>
+                            <tr>
+                                <td>Clasificación de tickets (10k/mes)</td>
+                                <td><strong>Haiku 4.5</strong></td>
+                                <td>$1–2</td>
+                                <td>Determinístico; volumen moderado; Haiku perfecto. Considera Sonnet si routing es complejo.</td>
+                            </tr>
+                            <tr>
+                                <td>Síntesis de investigación (80 papers)</td>
+                                <td><strong>Sonnet 5 + Deep Research</strong></td>
+                                <td>$50–150 (research) + $15–40 (síntesis)</td>
+                                <td>Deep Research busca y enlaza; Sonnet sintetiza. Más barato que Opus puro; mejor que Haiku en coherencia.</td>
+                            </tr>
+                            <tr>
+                                <td>Debugging de sistema con fallo crítico</td>
+                                <td><strong>Opus 5</strong></td>
+                                <td>$30–100</td>
+                                <td>Multi-causal; datos incompletos; require inferencia. Opus > Sonnet en diagnosis. Tiempo de downtime justifica costo.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- OPTIMIZACIONES DE COSTO -->
+            <div class="section">
+                <h2 class="section-title">5. Estrategias de Reducción de Costo Efectivo</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Técnica</th>
+                                <th>Ahorro Típico</th>
+                                <th>Cómo Aplicar</th>
+                                <th>Trade-off</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Prompt Caching (5 min)</strong></td>
+                                <td>90% en tokens reutilizados</td>
+                                <td>Cachea system prompt + documento base que se reutiliza >2 veces. Primera solicitud paga 1.25x; siguientes pagan 0.1x.</td>
+                                <td>Requiere que el contexto sea estable. Efectivo para: análisis de múltiples preguntas sobre mismo documento.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Batch API</strong></td>
+                                <td>50% en tokens procesados</td>
+                                <td>Agrupa solicitudes no urgentes (procesamiento nocturno, análisis bulk). API ejecuta en 24h, factura 50% del costo estándar.</td>
+                                <td>Latencia de 24h; no apto para consultas interactivas. Excelente para: generación de reportes diarios, análisis histórico.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Routing inteligente</strong></td>
+                                <td>65% si 70% de solicitudes van a Haiku</td>
+                                <td>Evalúa solicitud con Haiku primero (rápido, barato). Si falla, reintenta con Sonnet. Así solo el 30% usa Sonnet.</td>
+                                <td>Latencia de reintento; complejidad de lógica. Excelente para: clasificación donde Haiku falla 20–30% de las veces.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prompt Compression</strong></td>
+                                <td>20–40% en tokens entrada</td>
+                                <td>Elimina ejemplos redundantes, resume documentos previos, reduce verbosidad del system prompt sin perder funcionalidad.</td>
+                                <td>Riesgo de pérdida de información. Comienza comprimiendo ejemplos, luego resúmenes.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Batch + Cache combinado</strong></td>
+                                <td>95% potencial (50% batch × 90% cache hits)</td>
+                                <td>Envía lote de solicitudes vía Batch API donde cada una reutiliza caché. Ej: 100 preguntas sobre mismo documento, enviadas en batch.</td>
+                                <td>Complejidad máxima; requiere: contexto estable + procesamiento no urgente. Ideal para: análisis masivo de compliance.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footnote">
+                <strong>Notas importantes:</strong><br>
+                • Precios verificados a septiembre 2026. Consulta la documentación oficial de Anthropic para cualquier cambio futuro.<br>
+                • Deep Research disponible en Claude.ai Pro/Max; requiere cuota de investigación separada de API tokens estándar.<br>
+                • Fable 5.1 acceso bajo Project Glasswing (aplicación requerida).<br>
+                • El cálculo de "consumo relativo" asume ratio entrada:salida 1:5 (estándar en la familia Claude).<br>
+                • Los ejemplos concretos son indicativos; la calidad depende de contexto, claridad del prompt, y validación de salida.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
